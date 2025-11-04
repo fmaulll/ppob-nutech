@@ -1,9 +1,18 @@
 #!/bin/bash
 set -e
 
-echo "Starting PostgreSQL..."
-service postgresql start
 echo "Environment check: PGUSER=$PGUSER, PGDATABASE=$PGDATABASE"
+
+# Switch PostgreSQL to trust mode for localhost before starting
+PG_HBA=$(find /etc/postgresql -name pg_hba.conf)
+if [ -f "$PG_HBA" ]; then
+  echo "Temporarily switching PostgreSQL auth to trust..."
+  sed -ri "s/^(host\s+all\s+all\s+127\.0\.0\.1\/32\s+).*/\1trust/" "$PG_HBA"
+  sed -ri "s/^(host\s+all\s+all\s+::1\/128\s+).*/\1trust/" "$PG_HBA"
+fi
+
+echo "Starting PostgreSQL service..."
+service postgresql start
 
 # Wait for PostgreSQL to be ready
 until pg_isready -h localhost -p 5432 -U postgres; do
@@ -11,17 +20,18 @@ until pg_isready -h localhost -p 5432 -U postgres; do
   sleep 1
 done
 
-# Now that trust mode allows us in, set proper password
 echo "Setting postgres password..."
 psql -U postgres -c "ALTER USER postgres WITH PASSWORD '${PGPASSWORD}';"
 
-# Revert auth method back to scram-sha-256 for security
-sed -ri "s/^#?(host\s+all\s+all\s+127\.0\.0\.1\/32\s+)trust/\1scram-sha-256/" /etc/postgresql/*/main/pg_hba.conf
-sed -ri "s/^#?(host\s+all\s+all\s+::1\/128\s+)trust/\1scram-sha-256/" /etc/postgresql/*/main/pg_hba.conf
+# Restore secure authentication
+if [ -f "$PG_HBA" ]; then
+  echo "Restoring PostgreSQL auth to scram-sha-256..."
+  sed -ri "s/^(host\s+all\s+all\s+127\.0\.0\.1\/32\s+).*/\1scram-sha-256/" "$PG_HBA"
+  sed -ri "s/^(host\s+all\s+all\s+::1\/128\s+).*/\1scram-sha-256/" "$PG_HBA"
+  service postgresql restart
+fi
 
-service postgresql restart
-
-# Create database if not exists
+# Create database if it doesn't exist
 DB_EXIST=$(psql -U postgres -tAc "SELECT 1 FROM pg_database WHERE datname='${PGDATABASE}'")
 if [ "$DB_EXIST" != "1" ]; then
   echo "Creating database ${PGDATABASE}..."
