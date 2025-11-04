@@ -3,7 +3,7 @@ set -e
 
 echo "Environment check: PGUSER=$PGUSER, PGDATABASE=$PGDATABASE"
 
-# Switch PostgreSQL to trust mode for localhost before starting
+# Locate PostgreSQL config and switch to trust mode before starting
 PG_HBA=$(find /etc/postgresql -name pg_hba.conf)
 if [ -f "$PG_HBA" ]; then
   echo "Temporarily switching PostgreSQL auth to trust..."
@@ -21,7 +21,8 @@ until pg_isready -h localhost -p 5432 -U postgres; do
 done
 
 echo "Setting postgres password..."
-psql -U postgres -c "ALTER USER postgres WITH PASSWORD '${PGPASSWORD}';"
+# Connect to the default 'postgres' database
+psql -U postgres -d postgres -c "ALTER USER postgres WITH PASSWORD '${PGPASSWORD}';"
 
 # Restore secure authentication
 if [ -f "$PG_HBA" ]; then
@@ -31,11 +32,11 @@ if [ -f "$PG_HBA" ]; then
   service postgresql restart
 fi
 
-# Create database if it doesn't exist
-DB_EXIST=$(psql -U postgres -tAc "SELECT 1 FROM pg_database WHERE datname='${PGDATABASE}'")
+# Create your app database if it doesn't exist
+DB_EXIST=$(psql -U postgres -d postgres -tAc "SELECT 1 FROM pg_database WHERE datname='${PGDATABASE}'")
 if [ "$DB_EXIST" != "1" ]; then
   echo "Creating database ${PGDATABASE}..."
-  psql -U postgres -c "CREATE DATABASE ${PGDATABASE};"
+  psql -U postgres -d postgres -c "CREATE DATABASE ${PGDATABASE};"
 else
   echo "Database ${PGDATABASE} already exists."
 fi
