@@ -15,17 +15,14 @@ import errorHandler from './middlewares/errorHandler.js';
 
 const app = express();
 
-// ✅ Enable CORS
 app.use(
   cors({
-    origin: [
-      'http://localhost:5173', // your React dev server
-      'http://127.0.0.1:5173',
-    ],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-    credentials: true,
+    origin: '*', // Allow all origins
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
+
 
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
