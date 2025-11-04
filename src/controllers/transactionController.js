@@ -29,7 +29,7 @@ export async function makeTransaction(req, res, next) {
 
     await client.query('UPDATE users SET balance = $1 WHERE id = $2', [newBalance, user.id]);
     await client.query(
-      `INSERT INTO transactions (user_id, description, transaction_type, amount, invoice_number, created_on)
+      `INSERT INTO transactions (user_id, description, transaction_type, amount, invoice_number, created_at)
        VALUES ($1, $2, 'PAYMENT', $3, $4, NOW())`,
       [user.id, service_name, service_tariff, invoice_number]
     );
@@ -45,7 +45,7 @@ export async function makeTransaction(req, res, next) {
         service_name,
         transaction_type: 'PAYMENT',
         total_amount: Number(service_tariff),
-        created_on: new Date().toISOString(),
+        created_at: new Date().toISOString(),
       },
     });
   } catch (err) {
