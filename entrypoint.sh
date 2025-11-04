@@ -4,12 +4,13 @@ set -e
 # Start PostgreSQL service
 service postgresql start
 
-# Initialize database if it doesn't exist
-DB_EXIST=$(sudo -u postgres psql -tAc "SELECT 1 FROM pg_database WHERE datname='$PGDATABASE'")
+# Create database if it doesn't exist
+DB_EXIST=$(psql -U postgres -tAc "SELECT 1 FROM pg_database WHERE datname='$PGDATABASE'")
 if [ "$DB_EXIST" != "1" ]; then
-    echo "Creating database..."
-    sudo -u postgres psql -c "CREATE USER $PGUSER WITH PASSWORD '$PGPASSWORD';"
-    sudo -u postgres psql -c "CREATE DATABASE $PGDATABASE OWNER $PGUSER;"
+    echo "Creating database $PGDATABASE..."
+    psql -U postgres -c "CREATE DATABASE $PGDATABASE;"
+    psql -U postgres -c "CREATE USER $PGUSER WITH PASSWORD '$PGPASSWORD';"
+    psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE $PGDATABASE TO $PGUSER;"
 fi
 
 # Start Node.js app
