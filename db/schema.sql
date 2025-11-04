@@ -3,28 +3,20 @@
 -- =========================================================
 
 -- 1️⃣ USERS TABLE
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     email VARCHAR(100) UNIQUE NOT NULL,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     profile_image TEXT DEFAULT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- 2️⃣ BALANCES TABLE
-CREATE TABLE IF NOT EXISTS balances (
-    id SERIAL PRIMARY KEY,
-    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     balance NUMERIC(15,2) DEFAULT 0 CHECK (balance >= 0),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 3️⃣ BANNERS TABLE
-CREATE TABLE IF NOT EXISTS banners (
+-- 2️⃣ BANNERS TABLE
+CREATE TABLE banners (
     id SERIAL PRIMARY KEY,
     banner_name VARCHAR(100) NOT NULL,
     banner_image TEXT NOT NULL,
@@ -32,8 +24,8 @@ CREATE TABLE IF NOT EXISTS banners (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 4️⃣ SERVICES TABLE
-CREATE TABLE IF NOT EXISTS services (
+-- 3️⃣ SERVICES TABLE
+CREATE TABLE services (
     id SERIAL PRIMARY KEY,
     service_code VARCHAR(50) UNIQUE NOT NULL,
     service_name VARCHAR(100) NOT NULL,
@@ -42,25 +34,26 @@ CREATE TABLE IF NOT EXISTS services (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 5️⃣ TRANSACTIONS TABLE
-CREATE TABLE IF NOT EXISTS transactions (
+-- 4️⃣ TRANSACTIONS TABLE
+CREATE TABLE transactions (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    invoice_number VARCHAR(100) UNIQUE NOT NULL,
+    amount NUMERIC(15,2) NOT NULL CHECK (amount >= 0),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     transaction_type VARCHAR(50) NOT NULL CHECK (transaction_type IN ('TOPUP', 'PAYMENT')),
-    description TEXT NOT NULL,
-    total_amount NUMERIC(15,2) NOT NULL CHECK (total_amount >= 0),
-    service_code VARCHAR(50) REFERENCES services(service_code),
-    created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    invoice_number VARCHAR(100) UNIQUE NOT NULL,
+    description TEXT NOT NULL
 );
 
--- 6️⃣ DEFAULT DATA SEEDING
+-- 5️⃣ SEED DEFAULT DATA
+
+-- Insert sample banners
 INSERT INTO banners (banner_name, banner_image, description) VALUES
 ('Banner 1', 'https://nutech-integrasi.app/dummy.jpg', 'Lerem Ipsum Dolor sit amet'),
 ('Banner 2', 'https://nutech-integrasi.app/dummy.jpg', 'Lerem Ipsum Dolor sit amet'),
-('Banner 3', 'https://nutech-integrasi.app/dummy.jpg', 'Lerem Ipsum Dolor sit amet')
-ON CONFLICT DO NOTHING;
+('Banner 3', 'https://nutech-integrasi.app/dummy.jpg', 'Lerem Ipsum Dolor sit amet');
 
+-- Insert sample services
 INSERT INTO services (service_code, service_name, service_icon, service_tariff) VALUES
 ('PAJAK', 'Pajak PBB', 'https://nutech-integrasi.app/dummy.jpg', 40000),
 ('PLN', 'Listrik', 'https://nutech-integrasi.app/dummy.jpg', 10000),
@@ -73,5 +66,4 @@ INSERT INTO services (service_code, service_name, service_icon, service_tariff) 
 ('VOUCHER_GAME', 'Voucher Game', 'https://nutech-integrasi.app/dummy.jpg', 100000),
 ('VOUCHER_MAKANAN', 'Voucher Makanan', 'https://nutech-integrasi.app/dummy.jpg', 100000),
 ('QURBAN', 'Qurban', 'https://nutech-integrasi.app/dummy.jpg', 200000),
-('ZAKAT', 'Zakat', 'https://nutech-integrasi.app/dummy.jpg', 300000)
-ON CONFLICT DO NOTHING;
+('ZAKAT', 'Zakat', 'https://nutech-integrasi.app/dummy.jpg', 300000);
