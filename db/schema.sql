@@ -39,7 +39,7 @@ CREATE TABLE transactions (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     amount NUMERIC(15,2) NOT NULL CHECK (amount >= 0),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     transaction_type VARCHAR(50) NOT NULL CHECK (transaction_type IN ('TOPUP', 'PAYMENT')),
     invoice_number VARCHAR(100) UNIQUE NOT NULL,
@@ -50,21 +50,21 @@ CREATE TABLE transactions (
 
 -- Insert sample banners
 INSERT INTO banners (banner_name, banner_image, description) VALUES
-('Banner 1', 'https://nutech-integrasi.app/dummy.jpg', 'Lerem Ipsum Dolor sit amet'),
-('Banner 2', 'https://nutech-integrasi.app/dummy.jpg', 'Lerem Ipsum Dolor sit amet'),
-('Banner 3', 'https://nutech-integrasi.app/dummy.jpg', 'Lerem Ipsum Dolor sit amet');
+('Banner 1', 'https://ppob-nutech.onrender.com//public/dummy.jpg', 'Lerem Ipsum Dolor sit amet'),
+('Banner 2', 'https://ppob-nutech.onrender.com//public/dummy.jpg', 'Lerem Ipsum Dolor sit amet'),
+('Banner 3', 'https://ppob-nutech.onrender.com//public/dummy.jpg', 'Lerem Ipsum Dolor sit amet');
 
 -- Insert sample services
 INSERT INTO services (service_code, service_name, service_icon, service_tariff) VALUES
-('PAJAK', 'Pajak PBB', 'https://nutech-integrasi.app/dummy.jpg', 40000),
-('PLN', 'Listrik', 'https://nutech-integrasi.app/dummy.jpg', 10000),
-('PDAM', 'PDAM Berlangganan', 'https://nutech-integrasi.app/dummy.jpg', 40000),
-('PULSA', 'Pulsa', 'https://nutech-integrasi.app/dummy.jpg', 40000),
-('PGN', 'PGN Berlangganan', 'https://nutech-integrasi.app/dummy.jpg', 50000),
-('MUSIK', 'Musik Berlangganan', 'https://nutech-integrasi.app/dummy.jpg', 50000),
-('TV', 'TV Berlangganan', 'https://nutech-integrasi.app/dummy.jpg', 50000),
-('PAKET_DATA', 'Paket Data', 'https://nutech-integrasi.app/dummy.jpg', 50000),
-('VOUCHER_GAME', 'Voucher Game', 'https://nutech-integrasi.app/dummy.jpg', 100000),
-('VOUCHER_MAKANAN', 'Voucher Makanan', 'https://nutech-integrasi.app/dummy.jpg', 100000),
-('QURBAN', 'Qurban', 'https://nutech-integrasi.app/dummy.jpg', 200000),
-('ZAKAT', 'Zakat', 'https://nutech-integrasi.app/dummy.jpg', 300000);
+('PAJAK', 'Pajak PBB', 'https://ppob-nutech.onrender.com//public/dummy.jpg', 40000),
+('PLN', 'Listrik', 'https://ppob-nutech.onrender.com//public/dummy.jpg', 10000),
+('PDAM', 'PDAM Berlangganan', 'https://ppob-nutech.onrender.com//public/dummy.jpg', 40000),
+('PULSA', 'Pulsa', 'https://ppob-nutech.onrender.com//public/dummy.jpg', 40000),
+('PGN', 'PGN Berlangganan', 'https://ppob-nutech.onrender.com//public/dummy.jpg', 50000),
+('MUSIK', 'Musik Berlangganan', 'https://ppob-nutech.onrender.com//public/dummy.jpg', 50000),
+('TV', 'TV Berlangganan', 'https://ppob-nutech.onrender.com//public/dummy.jpg', 50000),
+('PAKET_DATA', 'Paket Data', 'https://ppob-nutech.onrender.com//public/dummy.jpg', 50000),
+('VOUCHER_GAME', 'Voucher Game', 'https://ppob-nutech.onrender.com//public/dummy.jpg', 100000),
+('VOUCHER_MAKANAN', 'Voucher Makanan', 'https://ppob-nutech.onrender.com//public/dummy.jpg', 100000),
+('QURBAN', 'Qurban', 'https://ppob-nutech.onrender.com//public/dummy.jpg', 200000),
+('ZAKAT', 'Zakat', 'https://ppob-nutech.onrender.com//public/dummy.jpg', 300000);
