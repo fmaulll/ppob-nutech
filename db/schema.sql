@@ -39,7 +39,7 @@ CREATE TABLE transactions (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     amount NUMERIC(15,2) NOT NULL CHECK (amount >= 0),
-    created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     transaction_type VARCHAR(50) NOT NULL CHECK (transaction_type IN ('TOPUP', 'PAYMENT')),
     invoice_number VARCHAR(100) UNIQUE NOT NULL,
