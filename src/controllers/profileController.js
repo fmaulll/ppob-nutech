@@ -64,7 +64,7 @@ export async function updateProfile(req, res, next) {
 export async function uploadProfileImage(req, res, next) {
   try {
     const { email } = req.user;
-    const fileUrl = `${process.env.URL}/${req.file.filename}`;
+    const fileUrl = `${process.env.URL}/uploads/${req.file.filename}`;
 
     await query('UPDATE users SET profile_image = $1 WHERE email = $2', [fileUrl, email]);
     const result = await query('SELECT email, first_name, last_name, profile_image FROM users WHERE email = $1', [email]);
