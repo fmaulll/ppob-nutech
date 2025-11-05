@@ -8,7 +8,7 @@ export async function getHistory(req, res, next) {
     const user = await query('SELECT id FROM users WHERE email = $1', [email]);
     const userId = user.rows[0].id;
 
-    let q = 'SELECT invoice_number, transaction_type, description, amount as total_amount, created_at FROM transactions WHERE user_id = $1 ORDER BY created_at DESC';
+    let q = 'SELECT invoice_number, transaction_type, description, amount as total_amount, created_on FROM transactions WHERE user_id = $1 ORDER BY created_on DESC';
     const params = [userId];
     if (limit) {
       q += ' LIMIT $2';
