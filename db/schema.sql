@@ -11,7 +11,7 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     profile_image TEXT DEFAULT NULL,
     balance NUMERIC(15,2) DEFAULT 0 CHECK (balance >= 0),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -21,7 +21,7 @@ CREATE TABLE banners (
     banner_name VARCHAR(100) NOT NULL,
     banner_image TEXT NOT NULL,
     description TEXT DEFAULT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- 3️⃣ SERVICES TABLE
@@ -31,7 +31,7 @@ CREATE TABLE services (
     service_name VARCHAR(100) NOT NULL,
     service_icon TEXT NOT NULL,
     service_tariff NUMERIC(15,2) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- 4️⃣ TRANSACTIONS TABLE
@@ -40,6 +40,7 @@ CREATE TABLE transactions (
     user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     amount NUMERIC(15,2) NOT NULL CHECK (amount >= 0),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     transaction_type VARCHAR(50) NOT NULL CHECK (transaction_type IN ('TOPUP', 'PAYMENT')),
     invoice_number VARCHAR(100) UNIQUE NOT NULL,
     description TEXT NOT NULL
